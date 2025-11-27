@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <algorithm>
 #include <math.h>
-#include "tensor.cuh"
-#include "ops.cuh"
+#include "../tensor.cuh"
+#include "../ops.cuh"
 
 
 #define BLOCK_MAX_SIZE 256

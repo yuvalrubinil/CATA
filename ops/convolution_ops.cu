@@ -1,8 +1,8 @@
 ﻿#include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include <stdio.h>
-#include "tensor.cuh"
-#include "ops.cuh"
+#include "../tensor.cuh"
+#include "../ops.cuh"
 
 
 #define BLOCK_MAX_SIZE 256

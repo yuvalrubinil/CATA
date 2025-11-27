@@ -7,8 +7,8 @@
 #include <curand.h>
 #include <curand_kernel.h>
 #include <chrono>
-#include "tensor.cuh"
-#include "ops.cuh"
+#include "../tensor.cuh"
+#include "../ops.cuh"
 
 
 #define BLOCK_MAX_SIZE 256
