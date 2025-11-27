@@ -17,7 +17,7 @@ I'm a cs student with a strong interest in the field of deep learning. During my
 1. Extarct the files into your project directory under 'cula' dir.
 2. Add to your project:  ops.cuh & tensor.cuh from 'cula'.
 3. Add to your project: all the files from 'ops' & 'tensor' dirs.
-4. Place all files under one 'cala' filter in the solution explorer (optional).
+4. Place all files under one 'cula' filter in the solution explorer (optional).
 5. Include:
    ```cpp
     #include "cula/tensor.cuh"
