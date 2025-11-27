@@ -2,11 +2,11 @@
 CULA - CUDA Linear Algebra and Tensor Operations Library Lightweight C++ library for GPU-accelerated tensor computations, supporting on-device and on-host data, linear algebra primitives, and convolutional neural network operations.
 
 # About
-I'm a cs student whos realy interested in the field of deep learning, during my own private projects I have faced many preformance issues when dealing with Convolutional Neural Networks or even regualr ones. I decided to learn CUDA as a tool - so I can design and customize my own gpu accelerated operations for my own needs. this project had 2 main goals: 
-1) learn cuda.
-2) create a library that can be used for more neural networks projects in the future.
+I'm a cs student whos realy interested in the field of deep learning. During my own private projects I have faced many preformance issues when dealing with Convolutional Neural Networks or even with regualr ones. The performance bottlenecks led me
+into this project with two main goals:
+1) Learn CUDA - so I can design and customize my own gpu accelerated operations for my own needs.
+2) Create code that can be used for more deep learning projects in the future.
  
- # To see the operations that are currently supported, please check: ops.cuh, tensor.cuh
 
 # How to use
 1. Download the zip.
@@ -15,6 +15,8 @@ I'm a cs student whos realy interested in the field of deep learning, during my 
     #include "cula/tensor.cuh"
     #include "cula/ops.cuh"
 4. Have fun!
+
+*To see the operations that are currently supported, please check: ops.cuh, tensor.cuh
 
 # Code Sample
   #include <iostream>
