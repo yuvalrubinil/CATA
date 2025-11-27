@@ -15,7 +15,7 @@ I'm a cs student with a strong interest in the field of deep learning. During my
  
 # How to use
 1. Extarct the files into your project directory (I recommand placing all of them under a 'cula' folder).
-2. Include:
+2. Include accordingly:
    ```cpp
     #include "cula/tensor.cuh"
     #include "cula/ops.cuh"
