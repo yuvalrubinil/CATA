@@ -1,6 +1,6 @@
 #include "cuda_runtime.h"
-#include "tensor.cuh"
-#include "ops.cuh"
+#include "../ops.cuh"
+#include "../tensor.cuh"
 #include <sstream>
 #include <iomanip>
 
