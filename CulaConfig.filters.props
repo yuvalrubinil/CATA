@@ -1,0 +1,31 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <!-- Group all CUDA files under one filter -->
+    <CudaCompile Include="$(ProjectDir)ops\**\*.cu">
+      <Filter>CULA</Filter>
+    </CudaCompile>
+    <CudaCompile Include="$(ProjectDir)tensor\**\*.cu">
+      <Filter>CULA</Filter>
+    </CudaCompile>
+
+    <!-- Group all headers under the same filter -->
+    <ClInclude Include="$(ProjectDir)ops\**\*.cuh">
+      <Filter>CULA</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)tensor\**\*.cuh">
+      <Filter>CULA</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)\*.cuh">
+      <Filter>CULA</Filter>
+    </ClInclude>
+  </ItemGroup>
+
+  <!-- Create the filter folder -->
+  <ItemGroup>
+    <Filter Include="CULA">
+      <UniqueIdentifier>{D6F72AEB-6F32-4FD0-95CD-7E1BA07A9F92}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+
+</Project>
