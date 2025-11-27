@@ -16,9 +16,10 @@ I'm a cs student with a strong interest in the field of deep learning. During my
 # How to use
 1. Extarct the files into your project directory (I recommand placing all of them under a 'cula' folder).
 2. Include:
+   ```cpp
     #include "cula/tensor.cuh"
     #include "cula/ops.cuh"
-3. Have fun!
+4. Have fun!
 
 # Code Sample
 ```cpp
@@ -27,7 +28,7 @@ I'm a cs student with a strong interest in the field of deep learning. During my
   #include "include/cula/ops.cuh"
   
   int main() {
-      std::vector<int> shape = { 2, 2 };
+      std::vector<int> shape = { 3 };
       Tensor v(shape, 1.0f);  // Fill with 1.0
       Tensor u(shape, 2.0f);  // Fill with 2.0
       std::cout << v.to_string() << std::endl;
