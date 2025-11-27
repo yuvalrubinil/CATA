@@ -24,8 +24,8 @@ I'm a cs student with a strong interest in the field of deep learning. During my
 # Code Sample
 ```cpp
   #include <iostream>
-  #include "include/cula/tensor.cuh"
-  #include "include/cula/ops.cuh"
+  #include "cula/tensor.cuh"
+  #include "cula/ops.cuh"
   
   int main() {
       std::vector<int> shape = { 3 };
