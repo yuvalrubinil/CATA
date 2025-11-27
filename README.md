@@ -14,12 +14,14 @@ I'm a cs student with a strong interest in the field of deep learning. During my
 2) Create code that can be used for more deep learning projects in the future.
  
 # How to use
-1. Extarct the files into your project directory (I recommand placing all of them under a 'cula' folder).
-2. Include accordingly:
+1. Extarct the files into your project directory under 'cula' dir.
+2. Add to your project  ops.cuh & tensor.cuh from 'cula'.
+3. Add to your project all the files from 'ops' & 'tensor' dirs.
+4. Include:
    ```cpp
     #include "cula/tensor.cuh"
     #include "cula/ops.cuh"
-4. Have fun!
+5. Have fun!
 
 # Code Sample
 ```cpp
