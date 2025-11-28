@@ -1,4 +1,4 @@
-![CULA Logo](images/cula_logo.png)
+![CULA Logo](images/cata_logo.png)
 # CULA - CUDA Linear Algebra Library
 This is a lightweight C++ library for GPU-accelerated tensor computations.
 
