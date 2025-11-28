@@ -1,5 +1,5 @@
 ![CATA Logo](images/cata_logo.png)
-# CATA - CUDA Accelarated Tensor Algebra
+# CATA - CUDA Accelerated Tensor Algebra
 This is a lightweight C++ library for GPU-accelerated tensor computations.
 
 ## Features
