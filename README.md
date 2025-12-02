@@ -7,11 +7,6 @@ This is a lightweight C++ library for GPU-accelerated tensor computations.
 * Linear algebra primitives
 * Convolutional neural network operations
 * Please check: `ops.cuh`, `tensor.cuh` to see the full list of operations that are currently supported
-
-# About
-I'm a cs student with a strong interest in the field of deep learning. During my own private projects I have faced many preformance issues when dealing with Convolutional Neural Networks or even with regualr ones. The performance bottlenecks led me into this project with two main goals:
-1) Learn CUDA - so I can design and customize my own gpu accelerated operations.
-2) Create code that can be used for more deep learning projects in the future.
  
 # How to use
 1. Extarct the files into your project directory under 'cata' dir.
