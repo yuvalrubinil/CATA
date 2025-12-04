@@ -63,7 +63,7 @@ void convolutionChainRuleCuda(Tensor& tensor, Tensor& pooledData, Tensor& dc_dz,
 void convolutionChainRulePlusEqualCuda(Tensor& tensor, Tensor& pooledData, Tensor& dc_dz, Tensor& dc_db, Tensor& dc_dk,
     int paddingFrame, int stride, int kernelWidth, char poolMode, int poolSize, int k);
 
-// --- Weight init---
+// --- Weight init ---
 void normalInitCuda(Tensor& u, float mean = 0.0f, float std = 1.0f);
 void xavierInitCuda(Tensor& u, int fan_in, int fan_out);
 void heNormalInitCuda(Tensor& u, int fan_in);
@@ -71,3 +71,9 @@ void heUniformInitCuda(Tensor& u, int fan_in);
 void zerosInitCuda(Tensor& u);
 void initWeights(Tensor& weights, const std::string& method, int fan_in = 0, int fan_out = 0);
 
+// --- Optimizers ---
+void momentumCuda(Tensor& u, Tensor& v, float beta);
+void accumulatedSquersCuda(Tensor& u, Tensor& v);
+void adagradSubtractionCuda(Tensor& w, Tensor& accumulatedSquers, Tensor& newDer, float learningRate);
+void momentumSqueredCuda(Tensor& u, Tensor& v, float beta);
+void rmsPropSubtractionCuda(Tensor& w, Tensor& v, Tensor& u, float learningRate);
