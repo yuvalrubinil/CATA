@@ -14,98 +14,122 @@
 #define EPSILON 1e-8
 
 
-// u[i] = beta * u[i] + (1-beta) * v[i]
-__global__ void momentum(float* u, float* v, int n, float beta) {
+// v[i] = beta * v[i] + (1-beta) * new_v[i]
+__global__ void momentum(float* v, float* new_v, int n, float beta) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int stride = gridDim.x * blockDim.x;
     for (; i < n; i += stride)
-        u[i] = beta * u[i] + (1-beta) * v[i];
+        v[i] = beta * v[i] + (1-beta) * new_v[i];
 }
 
-void momentumCuda(Tensor& u, Tensor& v, float beta) {
-    int n = u.getSize();
+void momentumCuda(Tensor& v, Tensor& newV, float beta) {
+    int n = v.getSize();
     int threadsPerBlock = std::min(BLOCK_MAX_SIZE, n);
     int blocks = (n + threadsPerBlock - 1) / threadsPerBlock;
     blocks = std::min(blocks, BLOCK_MAX_COUNT);
-    u.toDevice();
     v.toDevice();
-    momentum << <blocks, threadsPerBlock >> > (u.getData(), v.getData(), n, beta);
+    newV.toDevice();
+    momentum << <blocks, threadsPerBlock >> > (v.getData(), newV.getData(), n, beta);
     cudaDeviceSynchronize();
 }
 
 
 
-// u[i] = u[i] + (v[i] * v[i])
-__global__ void accumulatedSquers(float* u, float* v, int n) {
+// s[i] += (new_v[i] * new_v[i])
+__global__ void accumulatedSquers(float* s, float* new_v, int n) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int stride = gridDim.x * blockDim.x;
     for (; i < n; i += stride)
-        u[i] = u[i] + (v[i] * v[i]);
+        s[i] += (new_v[i] * new_v[i]);
 }
 
-void accumulatedSquersCuda(Tensor& u, Tensor& v) {
-    int n = u.getSize();
+void accumulatedSquersCuda(Tensor& s, Tensor& newV) {
+    int n = s.getSize();
     int threadsPerBlock = std::min(BLOCK_MAX_SIZE, n);
     int blocks = (n + threadsPerBlock - 1) / threadsPerBlock;
     blocks = std::min(blocks, BLOCK_MAX_COUNT);
-    u.toDevice();
-    v.toDevice();
-    accumulatedSquers << <blocks, threadsPerBlock >> > (u.getData(), v.getData(), n);
+    s.toDevice();
+    newV.toDevice();
+    accumulatedSquers << <blocks, threadsPerBlock >> > (s.getData(), newV.getData(), n);
     cudaDeviceSynchronize();
 }
 
-//w[i] -= (learningRate / (sqrtf(v[i]) + EPSILON)) * u[i]
-__global__ void momentumSqrtNormSubtraction(float* w, float* v, float* u, int n, float learningRate) {
+//w[i] -= (learningRate / (sqrtf(v[i]) + EPSILON)) * new_v[i]
+__global__ void sqrtNormSubtraction(float* w, float* v, float* new_v, int n, float learningRate) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int stride = gridDim.x * blockDim.x;
     for (; i < n; i += stride)
-        w[i] -= (learningRate / (sqrtf(v[i]) + EPSILON)) * u[i]; //w -= lr / (sqrt(vt) + eps) * (new der)
+        w[i] -= (learningRate / (sqrtf(v[i]) + EPSILON)) * new_v[i]; //w -= lr / (sqrt(vt) + eps) * (new der)
 }
 
-
-void adagradSubtractionCuda(Tensor& w, Tensor& accumulatedSquers, Tensor& newDer, float learningRate) {
-    int n = newDer.getSize();
+void adagradSubtractionCuda(Tensor& w, Tensor& s, Tensor& newV, float learningRate) {
+    int n = newV.getSize();
     int threadsPerBlock = std::min(BLOCK_MAX_SIZE, n);
     int blocks = (n + threadsPerBlock - 1) / threadsPerBlock;
     blocks = std::min(blocks, BLOCK_MAX_COUNT);
-    newDer.toDevice();
-    accumulatedSquers.toDevice();
+    newV.toDevice();
+    s.toDevice();
     w.toDevice();
-    momentumSqrtNormSubtraction << <blocks, threadsPerBlock >> > (w.getData(), accumulatedSquers.getData(), newDer.getData(), n, learningRate);
+    sqrtNormSubtraction << <blocks, threadsPerBlock >> > (w.getData(), s.getData(), newV.getData(), n, learningRate);
     cudaDeviceSynchronize();
 }
 
 
 
 
-// u[i] = beta * u[i] + (1 - beta) * (v[i] * v[i])
-__global__ void momentumSquered(float* u, float* v, int n, float beta) {
+// v[i] = beta * v[i] + (1 - beta) * (new_v[i] * new_v[i])
+__global__ void momentumSquered(float* v, float* new_v, int n, float beta) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int stride = gridDim.x * blockDim.x;
     for (; i < n; i += stride)
-        u[i] = beta * u[i] + (1 - beta) * (v[i] * v[i]);
+        v[i] = beta * v[i] + (1 - beta) * (new_v[i] * new_v[i]);
 }
 
-void momentumSqueredCuda(Tensor& u, Tensor& v, float beta) {
-    int n = u.getSize();
+void momentumSqueredCuda(Tensor& v, Tensor& newV, float beta) {
+    int n = v.getSize();
     int threadsPerBlock = std::min(BLOCK_MAX_SIZE, n);
     int blocks = (n + threadsPerBlock - 1) / threadsPerBlock;
     blocks = std::min(blocks, BLOCK_MAX_COUNT);
-    u.toDevice();
     v.toDevice();
-    momentumSquered << <blocks, threadsPerBlock >> > (u.getData(), v.getData(), n, beta);
+    newV.toDevice();
+    momentumSquered << <blocks, threadsPerBlock >> > (v.getData(), newV.getData(), n, beta);
     cudaDeviceSynchronize();
 }
 
 
-void rmsPropSubtractionCuda(Tensor& w, Tensor& squeredMomentum, Tensor& newDer, float learningRate) {
-    int n = newDer.getSize();
+void rmsPropSubtractionCuda(Tensor& w, Tensor& s, Tensor& newV, float learningRate) {
+    int n = newV.getSize();
     int threadsPerBlock = std::min(BLOCK_MAX_SIZE, n);
     int blocks = (n + threadsPerBlock - 1) / threadsPerBlock;
     blocks = std::min(blocks, BLOCK_MAX_COUNT);
-    newDer.toDevice();
-    squeredMomentum.toDevice();
+    newV.toDevice();
+    s.toDevice();
     w.toDevice();
-    momentumSqrtNormSubtraction << <blocks, threadsPerBlock >> > (w.getData(), squeredMomentum.getData(), newDer.getData(), n, learningRate);
+    sqrtNormSubtraction << <blocks, threadsPerBlock >> > (w.getData(), s.getData(), newV.getData(), n, learningRate);
+    cudaDeviceSynchronize();
+}
+
+//w[i] -= ((learningRate * v_hat) / (sqrtf(s_hat) + EPSILON))
+__global__ void adamSubtraction(float* w, float* s, float* v, int n, float learningRate, float bias_cor_beta1, float bias_cor_beta2) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int stride = gridDim.x * blockDim.x;
+    for (; i < n; i += stride) {
+        float v_hat = v[i] / bias_cor_beta1;
+        float s_hat = s[i] / bias_cor_beta2;
+        w[i] -= ((learningRate * v_hat) / (sqrtf(s_hat) + EPSILON)); //w -= (lr * v_hat) / (sqrt(s_hat) + eps)
+    }
+}
+
+void adamSubtractionCuda(Tensor& w, Tensor& s, Tensor& v, float learningRate, float beta1, float beta2, int t) {
+    int n = w.getSize();
+    int threadsPerBlock = std::min(BLOCK_MAX_SIZE, n);
+    int blocks = (n + threadsPerBlock - 1) / threadsPerBlock;
+    blocks = std::min(blocks, BLOCK_MAX_COUNT);
+    s.toDevice();
+    v.toDevice();
+    w.toDevice();
+    float bias_cor_beta1 = 1 - powf(beta1, t);
+    float bias_cor_beta2 = 1 - powf(beta2, t);
+    adamSubtraction << <blocks, threadsPerBlock >> > (w.getData(), s.getData(), v.getData(), n, learningRate, bias_cor_beta1, bias_cor_beta2);
     cudaDeviceSynchronize();
 }
