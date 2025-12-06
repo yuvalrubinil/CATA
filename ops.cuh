@@ -72,8 +72,9 @@ void zerosInitCuda(Tensor& u);
 void initWeights(Tensor& weights, const std::string& method, int fan_in = 0, int fan_out = 0);
 
 // --- Optimizers ---
-void momentumCuda(Tensor& u, Tensor& v, float beta);
-void accumulatedSquersCuda(Tensor& u, Tensor& v);
-void adagradSubtractionCuda(Tensor& w, Tensor& accumulatedSquers, Tensor& newDer, float learningRate);
-void momentumSqueredCuda(Tensor& u, Tensor& v, float beta);
-void rmsPropSubtractionCuda(Tensor& w, Tensor& v, Tensor& u, float learningRate);
+void momentumCuda(Tensor& v, Tensor& newV, float beta);
+void accumulatedSquersCuda(Tensor& s, Tensor& newV);
+void adagradSubtractionCuda(Tensor& w, Tensor& s, Tensor& newV, float learningRate);
+void momentumSqueredCuda(Tensor& v, Tensor& newV, float beta);
+void rmsPropSubtractionCuda(Tensor& w, Tensor& s, Tensor& newV, float learningRate);
+void adamSubtractionCuda(Tensor& w, Tensor& s, Tensor& v, float learningRate, float beta1, float beta2, int t);
